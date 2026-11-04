@@ -1,10 +1,15 @@
-import Login from "@/components/login";
+'use client'
+
+import { useProfileContext } from "@/context/profileContext";
 
 export default function Home() {
+
+  const { user } = useProfileContext()
+
+  
   return (
     <main>
-      <div>Hello world!</div>
-      <Login />
+      <div>Hello {user ? user.email : "World"}!</div>
     </main>
   );
 }

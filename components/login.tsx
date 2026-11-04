@@ -10,7 +10,7 @@ export default function Login(){
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
 
-    const { signUp } = useProfileContext()
+    const { signUp, signIn } = useProfileContext()
 
     return (
         <Box>
@@ -25,7 +25,7 @@ export default function Login(){
                 value={password}
                 onChange={(e)=>setPassword(e.target.value)}
             />
-            <Button variant="contained">Log In</Button>
+            <Button variant="contained" onClick={()=>signIn(email, password)}>Log In</Button>
             <Button variant="contained" onClick={()=>signUp(email, password)}>Sign Up</Button>
         </Box>
     )
