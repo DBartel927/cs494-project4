@@ -1,15 +1,15 @@
-'use client'
+import Profile from "@/components/profile"
 
-import { useProfileContext } from "@/context/profileContext";
+import ImageUpload from "@/components/imageUpload"
+import { Box } from "@mui/material"
 
 export default function Home() {
-
-  const { user } = useProfileContext()
-
-  
-  return (
-    <main>
-      <div>Hello {user ? user.email : "World"}!</div>
-    </main>
-  );
+    return (
+        <main>
+            <Profile />
+            <Box sx={{ p: 2 }}>
+                <ImageUpload />
+            </Box>
+        </main>
+    )
 }
