@@ -38,7 +38,7 @@ export function ProfileContextProvider(props: { children: ReactNode }) {
             supabase.auth.getUser().then((userResponse) => { setUser(userResponse.data.user) })
         }
     }, [])
-// Test
+
     function signIn(email: string, password: string) {
         return authSignIn({
             email,
