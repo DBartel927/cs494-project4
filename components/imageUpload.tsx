@@ -16,7 +16,12 @@ import {
 import CloudUploadIcon from "@mui/icons-material/CloudUpload"
 import { DeleteOutlineOutlined } from "@mui/icons-material"
 
+import { useImageContext } from "@/context/imageContext"
+
 export default function ImageUpload() {
+
+    const { uploadImages } = useImageContext()
+
     const [images, setImages] = useState<File[]>([])
     const [isCompressing, setIsCompressing] = useState(false)
 
@@ -119,7 +124,7 @@ export default function ImageUpload() {
                 fullWidth
                 variant="contained"
                 disabled={images.length === 0 || isCompressing}
-                onClick={() => { }}
+                onClick={() => { uploadImages(images) }}
                 sx={{
                     py: 1.5,
                     borderRadius: 2,

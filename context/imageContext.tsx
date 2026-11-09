@@ -1,9 +1,19 @@
 'use client'
 
-import { createContext, useContext, useState, ReactNode } from 'react'
+import { createContext, useContext, ReactNode } from 'react'
 
 
 // create a type for your props
+
+// need to store the imagesUrls
+// need to get the imageUrls method: GET
+// need a function to delete an image by URL method: DELETE
+
+
+//  components:
+// show our gallery
+// image needs a delete icon so the user can click that to trigger the delete function
+
 type ImageContextProps = {
     uploadImages: (images: File[]) => void
 
@@ -15,8 +25,17 @@ const ImageContext = createContext<ImageContextProps | undefined>(undefined)
 // create a context provider
 export function ImageContextProvider(props: { children: ReactNode }) {
     
-    function uploadImages(images: File[]){
-        console.log(images)
+    async function uploadImages(images: File[]){
+
+        const formData = new FormData()
+
+        images.forEach(image=>formData.append("images", image))
+
+        const response = await fetch("/api/images", {method: "POST", body: formData})
+
+        const data = await response.json()
+
+        console.log(data.imageUrls)
     }
 
 

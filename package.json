@@ -17,6 +17,7 @@
     "@mui/material-nextjs": "^9.5.0",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.119.0",
+    "@vercel/blob": "^2.9.0",
     "browser-image-compression": "^2.0.2",
     "next": "16.4.5",
     "react": "19.3.0",
