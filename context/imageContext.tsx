@@ -13,7 +13,7 @@ type ImageContextProps = {
 const ImageContext = createContext<ImageContextProps | undefined>(undefined)
 
 // create a context provider
-export function Imagecontext(props: { children: ReactNode }) {
+export function ImageContextProvider(props: { children: ReactNode }) {
     
     function uploadImages(images: File[]){
         console.log(images)
