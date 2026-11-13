@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from "react"
 import imageCompression from "browser-image-compression"
+import Image from "next/image"
 
 import {
     Box,
@@ -20,7 +21,7 @@ import { useImageContext } from "@/context/imageContext"
 
 export default function ImageUpload() {
 
-    const { uploadImages } = useImageContext()
+    const { uploadImages, loading } = useImageContext()
 
     const [images, setImages] = useState<File[]>([])
     const [isCompressing, setIsCompressing] = useState(false)
@@ -123,14 +124,12 @@ export default function ImageUpload() {
             <Button
                 fullWidth
                 variant="contained"
-                disabled={images.length === 0 || isCompressing}
-                onClick={() => { uploadImages(images) }}
-                sx={{
-                    py: 1.5,
-                    borderRadius: 2,
-                    textTransform: "none",
-                    fontWeight: 600
+                disabled={images.length === 0 || isCompressing || loading}
+                onClick={async () => {
+                    await uploadImages(images)
+                    setImages([])
                 }}
+                sx={{ py: 1.5, borderRadius: 2, textTransform: "none", fontWeight: 600 }}
             >
                 Upload {images.length > 0 ? `${images.length} Images` : "Images"}
             </Button>
@@ -165,16 +164,7 @@ function ImagePreview({
             }}
         >
             {preview && (
-                <Box
-                    component="img"
-                    src={preview}
-                    alt={image.name}
-                    sx={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover"
-                    }}
-                />
+                <Image src={preview} alt={image.name} fill unoptimized style={{ objectFit: "cover" }} />
             )}
 
             <IconButton

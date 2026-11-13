@@ -1,56 +1,82 @@
 'use client'
 
-import { createContext, useContext, ReactNode } from 'react'
-
-
-// create a type for your props
-
-// need to store the imagesUrls
-// need to get the imageUrls method: GET
-// need a function to delete an image by URL method: DELETE
-
-
-//  components:
-// show our gallery
-// image needs a delete icon so the user can click that to trigger the delete function
+import { createContext, useContext, useState, ReactNode } from 'react'
 
 type ImageContextProps = {
-    uploadImages: (images: File[]) => void
-
+    imageUrls: string[]
+    uploadImages: (images: File[]) => Promise<void>
+    getImages: () => Promise<void>
+    deleteImage: (imageUrl: string) => Promise<void>
+    loading: boolean
 }
 
-// create a context variable
 const ImageContext = createContext<ImageContextProps | undefined>(undefined)
 
-// create a context provider
 export function ImageContextProvider(props: { children: ReactNode }) {
-    
-    async function uploadImages(images: File[]){
+    const [imageUrls, setImageUrls] = useState<string[]>([])
+    const [loading, setLoading] = useState<boolean>(false)
+
+    async function getImages() {
+        setLoading(true)
+
+        const response = await fetch("/api/images")
+        const data = await response.json()
+
+        if (response.ok) {
+            setImageUrls(data.imageUrls)
+        }
+
+        setLoading(false)
+    }
+
+    async function uploadImages(images: File[]) {
+        setLoading(true)
 
         const formData = new FormData()
 
-        images.forEach(image=>formData.append("images", image))
+        images.forEach(image => formData.append("images", image))
 
-        const response = await fetch("/api/images", {method: "POST", body: formData})
+        const response = await fetch("/api/images", {
+            method: "POST",
+            body: formData
+        })
 
         const data = await response.json()
 
-        console.log(data.imageUrls)
+        if (response.ok) {
+            setImageUrls(prev => [...prev, ...data.imageUrls])
+        }
+
+        setLoading(false)
     }
 
+    async function deleteImage(imageUrl: string) {
+        setLoading(true)
+
+        const response = await fetch(`/api/images?url=${encodeURIComponent(imageUrl)}`, {
+            method: "DELETE"
+        })
+
+        if (response.ok) {
+            setImageUrls(prev => prev.filter(url => url !== imageUrl))
+        }
+
+        setLoading(false)
+    }
 
     return (
-        <ImageContext.Provider value={{ uploadImages }}>
+        <ImageContext.Provider value={{ imageUrls, uploadImages, getImages, deleteImage, loading }}>
             {props.children}
         </ImageContext.Provider>
     )
 }
 
-// create a function to use the context
 export function useImageContext() {
     const context = useContext(ImageContext)
+
     if (!context) {
-        throw new Error('useProfileContext must be used within a ProfileContextProvider')
+        throw new Error('useImageContext must be used within an ImageContextProvider')
     }
+
     return context
 }
